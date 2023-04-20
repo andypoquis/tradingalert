@@ -1,6 +1,11 @@
 import pandas as pd
 import talib
 import matplotlib.pyplot as plt
+import telebot
+
+bot_token = '6201417182:AAHUuh597R8OadUvDqlgcTfLVUA7gLRLa1I'
+group_id = '@tradingandypoquis'
+bot = telebot.TeleBot(bot_token)
 
 # Cargar datos del archivo CSV
 df = pd.read_csv('klines_BTCUSDT_5m.csv')
@@ -78,13 +83,15 @@ ax3.plot(df_filtered['timestamp'], df_filtered['close'], label='Precio')
 ax3.scatter(wait_signals['timestamp'], wait_signals['close'], marker='v', color='yellow', s=100, label='esperar')
 ax3.legend()
 
-print("Datos de compra:")
-print(str(buy_signals['close']))
-
-print("Datos de venta:")
-print(str(sell_signals['close']))
-
 # Guardar las figuras en archivos png
 fig1.savefig('compra.png')
 fig2.savefig('venta.png')
 fig3.savefig('esperar.png')
+
+# Enviar las imágenes al grupo
+with open('compra.png', 'rb') as f:
+    bot.send_photo(group_id, f)
+with open('venta.png', 'rb') as f:
+    bot.send_photo(group_id, f)
+with open('esperar.png', 'rb') as f:
+    bot.send_photo(group_id, f)
